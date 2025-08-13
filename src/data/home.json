@@ -1,0 +1,19 @@
+{
+  "welcomeText": "Hello. My name is",
+  "name": "Creative Professional",
+  "text": "A full stack developer and designer specializing in modern web technologies and user experience design.",
+  "socialLinks": [
+    {
+      "text": "LINKEDIN",
+      "to": "#"
+    },
+    {
+      "text": "TWITTER",
+      "to": "#"
+    },
+    {
+      "text": "INSTAGRAM",
+      "to": "#"
+    }
+  ]
+}
