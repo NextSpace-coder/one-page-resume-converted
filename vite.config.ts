@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
 import viteTagger from "vite-tagger";
 
 // https://vitejs.dev/config/
@@ -8,12 +8,9 @@ export default defineConfig(() => {
     server: {
       host: "::",
       port: 8080,
-      allowedHosts: true,
+      allowedHosts: true as true,
     },
-    plugins: [
-      react(),
-      viteTagger({ prefixName: "wb" }),
-    ],
-    base: './'
+    plugins: [react(), viteTagger({ prefixName: "wb" })],
+    base: "./",
   };
 });
