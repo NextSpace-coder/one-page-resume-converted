@@ -4,7 +4,7 @@ export type Database = {
       "1a7b1d99-2289-43b9-aec7-87ebddafd209_form_submissions": {
         Row: {
           id: string;
-          user_id: string;
+          user_id: string | null;
           form_data: any;
           submitted_at: string | null;
           ip_address: string | null;
@@ -14,7 +14,7 @@ export type Database = {
         };
         Insert: {
           id?: string;
-          user_id?: string;
+          user_id?: string | null;
           form_data: any;
           submitted_at?: string | null;
           ip_address?: string | null;
@@ -24,7 +24,7 @@ export type Database = {
         };
         Update: {
           id?: string;
-          user_id?: string;
+          user_id?: string | null;
           form_data?: any;
           submitted_at?: string | null;
           ip_address?: string | null;
