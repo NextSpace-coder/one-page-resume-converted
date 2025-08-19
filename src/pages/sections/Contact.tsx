@@ -1,7 +1,5 @@
 import React, { Fragment, useState } from 'react';
-
-// Plugins
-import axios from 'axios';
+import { useFormSubmissions } from '../../hooks/useFormSubmissions';
 
 // Data
 import contactData from '../../data/contact.json';
@@ -37,6 +35,8 @@ function Contact() {
     status: null,
   });
 
+  const { submitForm, loading } = useFormSubmissions();
+
   /**
    * Change {formData} variable when user input data
    *
@@ -71,26 +71,27 @@ function Contact() {
   };
 
   /**
-   * Submitting message when user clock send button
+   * Submitting message when user clicks send button
    *
    * @param e form submit event
    */
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Submitting Form
     setServerState({ submitting: true });
-    axios({
-      method: 'post',
-      url: contactData.formspreeEndpoint,
-      data: formData,
-    })
-      .then((r) => {
-        handleServerResponse(true, 'Message Has Been Send');
-      })
-      .catch((r) => {
-        handleServerResponse(false, 'Error occuars while sending');
-      });
+
+    try {
+      const result = await submitForm(formData);
+      
+      if (result.success) {
+        handleServerResponse(true, '消息已成功发送到 Supabase！');
+      } else {
+        handleServerResponse(false, result.error || '发送失败，请重试');
+      }
+    } catch (error) {
+      handleServerResponse(false, '发送过程中出现错误');
+    }
   };
 
   return (
@@ -162,12 +163,16 @@ function Contact() {
                       onChange={handleDataChange}></textarea>
                   </p>
                   <p className="contact-submit-holder">
-                    <input type="submit" value="SEND" />
+                    <input 
+                      type="submit" 
+                      value={loading || serverState.submitting ? "SENDING..." : "SEND"} 
+                      disabled={loading || serverState.submitting}
+                    />
                   </p>
                   {(serverState.submitting || serverState.status?.msg) && (
                     <p className="respond-message">
                       {serverState.submitting
-                        ? 'Sending message'
+                        ? '正在发送消息...'
                         : serverState.status
                         ? serverState.status?.msg
                         : ''}
