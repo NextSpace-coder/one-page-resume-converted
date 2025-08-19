@@ -15,23 +15,32 @@ export const useFormSubmissions = () => {
     setError(null);
 
     try {
-      // 获取用户的 User Agent
-      const userAgent = navigator.userAgent;
-      
+      // 先检查表是否存在并且可以访问
+      const { data: testData, error: testError } = await supabase
+        .from('1a7b1d99-2289-43b9-aec7-87ebddafd209_form_submissions')
+        .select('id')
+        .limit(1);
+
+      console.log('Table test:', { testData, testError });
+
+      // 尝试插入数据，使用最简单的结构
+      const insertData = {
+        form_data: {
+          name: formData['your-name'],
+          email: formData['your-email'],
+          subject: formData['your-subject'],
+          message: formData['your-message']
+        }
+      };
+
+      console.log('Inserting data:', insertData);
+
       const { data, error } = await supabase
         .from('1a7b1d99-2289-43b9-aec7-87ebddafd209_form_submissions')
-        .insert({
-          user_id: null, // 设置为 null，允许匿名提交
-          form_data: {
-            name: formData['your-name'],
-            email: formData['your-email'],
-            subject: formData['your-subject'],
-            message: formData['your-message']
-          },
-          user_agent: userAgent,
-          submitted_at: new Date().toISOString()
-        })
+        .insert(insertData)
         .select();
+
+      console.log('Insert result:', { data, error });
 
       if (error) {
         throw error;
@@ -39,6 +48,7 @@ export const useFormSubmissions = () => {
 
       return { success: true, data };
     } catch (err: any) {
+      console.error('Form submission error:', err);
       const errorMessage = err.message || 'Failed to submit form';
       setError(errorMessage);
       return { success: false, error: errorMessage };
